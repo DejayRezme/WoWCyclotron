@@ -17,6 +17,7 @@ namespace WoWCyclotron
 
 		protected NumericUpDown boxNumeric;
 		protected ComboBox layoutComboBox;
+		protected ComboBox orientationComboBox;
 		protected NumericUpDown pipLeftNumeric;
 		protected NumericUpDown pipTopNumeric;
 		protected NumericUpDown pipWidthNumeric;
@@ -102,6 +103,14 @@ namespace WoWCyclotron
 			//layoutComboBox.Padding = new Padding(40);
 			layoutComboBox.SelectedIndexChanged += new EventHandler(OnLayoutChanged);
 			AddTableLabelControl("Select Layout:", 0, row++, layoutComboBox);
+
+			orientationComboBox = new ComboBox();
+			orientationComboBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			orientationComboBox.Items.AddRange(Enum.GetNames(typeof(MultiBoxOrientation)));
+			orientationComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+			orientationComboBox.SelectedItem = config.layoutOrientation.ToString();
+			orientationComboBox.SelectedIndexChanged += new EventHandler(OnLayoutOrientationChanged);
+			AddTableLabelControl("Layout Orientation:", 0, row++, orientationComboBox);
 
 			pipLeftNumeric = new NumericUpDown();
 			InitNumeric(pipLeftNumeric, config.PIPPosition.Left);
@@ -232,9 +241,11 @@ namespace WoWCyclotron
 			this.MinimumSize = windowSize;
 			// position this form to the center of the cursor position
 			this.StartPosition = FormStartPosition.Manual;
-			Point startPosition = Cursor.Position;
-			startPosition.Offset(-windowSize.Width / 2, -windowSize.Height / 2);
-			this.Location = startPosition;
+			//Point startPosition = Cursor.Position;
+			//startPosition.Offset(-windowSize.Width / 2, -windowSize.Height / 2);
+			//this.Location = startPosition;
+			Rectangle r = config.previousAppPosition;
+			this.DesktopBounds = new System.Drawing.Rectangle(r.Left, r.Top, r.Width, r.Height);
 
 			windowSwitcherTimer = new Timer();
 			windowSwitcherTimer.Interval = 5;
@@ -393,10 +404,10 @@ namespace WoWCyclotron
 
 		private void updatePIPSizeVisible()
 		{
-			pipLeftNumeric.Enabled = config.layout == MultiBoxLayouts.PIPVertical;
-			pipTopNumeric.Enabled = config.layout == MultiBoxLayouts.PIPVertical;
-			pipWidthNumeric.Enabled = config.layout == MultiBoxLayouts.PIPVertical;
-			pipHeightNumeric.Enabled = config.layout == MultiBoxLayouts.PIPVertical;
+			pipLeftNumeric.Enabled = config.layout == MultiBoxLayouts.PictureInPicture;
+			pipTopNumeric.Enabled = config.layout == MultiBoxLayouts.PictureInPicture;
+			pipWidthNumeric.Enabled = config.layout == MultiBoxLayouts.PictureInPicture;
+			pipHeightNumeric.Enabled = config.layout == MultiBoxLayouts.PictureInPicture;
 			if (config.layout == MultiBoxLayouts.CustomConfig)
 				boxNumeric.Value = config.customLayout.Length;
 			boxNumeric.Enabled = config.layout != MultiBoxLayouts.CustomConfig;
@@ -414,7 +425,15 @@ namespace WoWCyclotron
 		private void OnLayoutChanged(object sender, EventArgs e)
 		{
 			String layoutName = layoutComboBox.SelectedItem.ToString();
-			config.layout = (MultiBoxLayouts)Enum.Parse(typeof(MultiBoxLayouts), layoutName);
+			config.layout = Enum.Parse<MultiBoxLayouts>(layoutName);
+			updatePIPSizeVisible();
+			//updateWoWClientsIfRunning();
+		}
+
+		private void OnLayoutOrientationChanged(object sender, EventArgs e)
+		{
+			String layoutName = orientationComboBox.SelectedItem.ToString();
+			config.layoutOrientation = Enum.Parse<MultiBoxOrientation>(layoutName);
 			updatePIPSizeVisible();
 			//updateWoWClientsIfRunning();
 		}
@@ -481,6 +500,8 @@ namespace WoWCyclotron
 
 		protected override void OnClosing(CancelEventArgs e)
 		{
+			System.Drawing.Rectangle r = (WindowState == FormWindowState.Normal) ? DesktopBounds : RestoreBounds;
+			config.previousAppPosition = new Rectangle(r.Left, r.Top, r.Width, r.Height);
 			config.save();
 			if (config.taskbarAutohide && config.taskbarAutohideFalseOnClose)
 				Win32Util.setTaskbarAutohide(false);

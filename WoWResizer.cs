@@ -131,7 +131,7 @@ namespace WoWCyclotron
 			if (config.layout == MultiBoxLayouts.BottomRow)
 			{
 				// put all them pips on the bottom row, divide screen by boxCount-1
-				int gridN = Math.Max(2, config.boxCount - 1);
+				int gridN = Math.Max(3, config.boxCount - 1);
 				int pipWidth = screen.Width / gridN;
 				int pipHeight = (pipWidth / 16) * 9;
 				int mainHeight = screen.Height - pipHeight;
@@ -167,7 +167,7 @@ namespace WoWCyclotron
 			{   // Main window topleft with windows arranted in L shape around bottom right
 				// how many screens fit into an L shape in an N*N grid: 1 + N + N-1 = 2*N
 				// Calculate grid needed for LType layout: MB / 2
-				int gridN = Math.Max(2, (int)Math.Ceiling(config.boxCount / 2.0));
+				int gridN = Math.Max(3, (int)Math.Ceiling(config.boxCount / 2.0));
 				int pipWidth = screen.Width / gridN;
 				//pipWidth = Math.Floor(pipWidth / 16) * 16;
 				int pipHeight = (pipWidth / 16) * 9;
@@ -185,14 +185,19 @@ namespace WoWCyclotron
 					layouts.Add(new Rectangle(mainWidth, mainHeight - (i + 1) * pipHeight, pipWidth, pipHeight));
 				}
 			}
-			else if (config.layout == MultiBoxLayouts.PIPVertical)
+			else if (config.layout == MultiBoxLayouts.PictureInPicture)
 			{
 				layouts.Add(screen);
-				var pip = config.PIPPosition;
+				Rectangle pip = config.PIPPosition;
+				// put the pips according to config orientation
 				for (int i = 0; i < config.boxCount - 1; i++)
-				{   // put the pips according to config vertical
-					layouts.Add(new Rectangle(pip.Left, pip.Top + i * pip.Height, pip.Width, pip.Height));
+				{
+					if (config.layoutOrientation == MultiBoxOrientation.Horizontal)
+						layouts.Add(new Rectangle(pip.Left + i * pip.Width, pip.Top, pip.Width, pip.Height));
+					else
+						layouts.Add(new Rectangle(pip.Left, pip.Top + i * pip.Height, pip.Width, pip.Height));
 				}
+
 			}
 			else if (config.layout == MultiBoxLayouts.CustomConfig)
 			{

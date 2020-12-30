@@ -11,9 +11,23 @@ namespace WoWCyclotron
 		BottomRow,
 		BottomAndRight,
 		BottomDoubleRow,
-		PIPVertical,
-		//PIPHorizontal,
+		PictureInPicture,
 		CustomConfig,
+	}
+
+	public enum MultiBoxOrientation
+	{
+		Horizontal,
+		Vertical,
+		Both,
+	}
+
+	public enum MultiBoxMainWindow
+	{
+		TopLeft,
+		TopRight,
+		BottomLeft,
+		BottomRight,
 	}
 
 	public struct Rectangle
@@ -31,6 +45,8 @@ namespace WoWCyclotron
 		public int boxCount = 5;
 		public int maxBoxCount = 10;
 		public MultiBoxLayouts layout = MultiBoxLayouts.BottomRow;
+		public MultiBoxMainWindow layoutMain = MultiBoxMainWindow.TopLeft;
+		public MultiBoxOrientation layoutOrientation = MultiBoxOrientation.Horizontal;
 		public bool borderless = true;
 		public bool alwaysOnTop = false;
 		private String installPath = null;
@@ -46,6 +62,8 @@ namespace WoWCyclotron
 		public String unsecureClipboardString;
 		public Rectangle PIPPosition = new Rectangle(800, 800, 240, 135);
 		public Rectangle[] customLayout;
+
+		public Rectangle previousAppPosition = new Rectangle();
 
 		public const String configFileName = "WoWCyclotron.json";
 
