@@ -8,11 +8,12 @@ namespace WoWCyclotron
 {
 	public enum MultiBoxLayouts
 	{
-		BottomRow,
-		BottomAndRight,
-		BottomDoubleRow,
+		SingleRow,
+		LShape,
+		DoubleRow,
 		PictureInPicture,
 		CustomConfig,
+		SingleRowFill,
 	}
 
 	public enum MultiBoxOrientation
@@ -25,9 +26,7 @@ namespace WoWCyclotron
 	public enum MultiBoxMainWindow
 	{
 		TopLeft,
-		TopRight,
 		BottomLeft,
-		BottomRight,
 	}
 
 	public struct Rectangle
@@ -44,7 +43,7 @@ namespace WoWCyclotron
 	{
 		public int boxCount = 5;
 		public int maxBoxCount = 10;
-		public MultiBoxLayouts layout = MultiBoxLayouts.BottomRow;
+		public MultiBoxLayouts layout = MultiBoxLayouts.SingleRow;
 		public MultiBoxMainWindow layoutMain = MultiBoxMainWindow.TopLeft;
 		public MultiBoxOrientation layoutOrientation = MultiBoxOrientation.Horizontal;
 		public bool borderless = true;

@@ -128,7 +128,7 @@ namespace WoWCyclotron
 			else
 				screen = new Rectangle(0, 0, SystemInformation.PrimaryMonitorSize.Width, SystemInformation.PrimaryMonitorSize.Height);
 
-			if (config.layout == MultiBoxLayouts.BottomRow)
+			if (config.layout == MultiBoxLayouts.SingleRow)
 			{
 				// put all them pips on the bottom row, divide screen by boxCount-1
 				int gridN = Math.Max(3, config.boxCount - 1);
@@ -143,7 +143,7 @@ namespace WoWCyclotron
 					layouts.Add(new Rectangle(i * pipWidth, mainHeight, pipWidth, pipHeight));
 				}
 			}
-			else if (config.layout == MultiBoxLayouts.BottomDoubleRow)
+			else if (config.layout == MultiBoxLayouts.DoubleRow)
 			{
 				// put all them pips on the bottom row, divide screen by boxCount-1
 				int gridN = Math.Max(4, (int)Math.Ceiling((config.boxCount - 1) / 2.0));
@@ -163,7 +163,7 @@ namespace WoWCyclotron
 						layouts.Add(new Rectangle((i - firstRow) * pipWidth, mainHeight + pipHeight, pipWidth, pipHeight));
 				}
 			}
-			else if (config.layout == MultiBoxLayouts.BottomAndRight)
+			else if (config.layout == MultiBoxLayouts.LShape)
 			{   // Main window topleft with windows arranted in L shape around bottom right
 				// how many screens fit into an L shape in an N*N grid: 1 + N + N-1 = 2*N
 				// Calculate grid needed for LType layout: MB / 2
@@ -197,13 +197,29 @@ namespace WoWCyclotron
 					else
 						layouts.Add(new Rectangle(pip.Left, pip.Top + i * pip.Height, pip.Width, pip.Height));
 				}
-
 			}
 			else if (config.layout == MultiBoxLayouts.CustomConfig)
 			{
 				for (int i = 0; i < config.boxCount; i++)
 				{   // put custom configs in there, repeat last one if not enough
 					layouts.Add(config.customLayout[Math.Min(i, config.customLayout.Length - 1)]);
+				}
+			}
+			else if (config.layout == MultiBoxLayouts.SingleRowFill)
+			{
+				// put all them pips on the top row, divide screen by boxCount-1
+				double AR = (double)screen.Width / screen.Height;
+				int gridN = Math.Max(2, config.boxCount - 1);
+				int pipWidth = screen.Width / gridN;
+				int pipHeight = (int)(pipWidth * ((double)gridN / (gridN + 1)) / AR);
+				int mainHeight = screen.Height - pipHeight;
+				int mainWidth = screen.Width;
+
+				int b = config.layoutMain == MultiBoxMainWindow.BottomLeft ? 1 : 0;
+				layouts.Add(new Rectangle(screen.Left, screen.Top + b * pipHeight, mainWidth, mainHeight));
+				for (int i = 0; i < config.boxCount - 1; i++)
+				{   // we can fit gridN windows at the bottom
+					layouts.Add(new Rectangle(i * pipWidth, mainHeight * (1-b), pipWidth, pipHeight));
 				}
 			}
 		}

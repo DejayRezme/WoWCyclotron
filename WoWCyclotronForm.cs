@@ -18,6 +18,7 @@ namespace WoWCyclotron
 		protected NumericUpDown boxNumeric;
 		protected ComboBox layoutComboBox;
 		protected ComboBox orientationComboBox;
+		protected ComboBox layoutMainWindowComboBox;
 		protected NumericUpDown pipLeftNumeric;
 		protected NumericUpDown pipTopNumeric;
 		protected NumericUpDown pipWidthNumeric;
@@ -110,7 +111,15 @@ namespace WoWCyclotron
 			orientationComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 			orientationComboBox.SelectedItem = config.layoutOrientation.ToString();
 			orientationComboBox.SelectedIndexChanged += new EventHandler(OnLayoutOrientationChanged);
-			AddTableLabelControl("Layout Orientation:", 0, row++, orientationComboBox);
+			AddTableLabelControl("Orientation:", 0, row++, orientationComboBox);
+
+			layoutMainWindowComboBox = new ComboBox();
+			layoutMainWindowComboBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			layoutMainWindowComboBox.Items.AddRange(Enum.GetNames(typeof(MultiBoxMainWindow)));
+			layoutMainWindowComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+			layoutMainWindowComboBox.SelectedItem = config.layoutMain.ToString();
+			layoutMainWindowComboBox.SelectedIndexChanged += new EventHandler(OnLayoutMainWindowChanged);
+			AddTableLabelControl("Main Window:", 0, row++, layoutMainWindowComboBox);
 
 			pipLeftNumeric = new NumericUpDown();
 			InitNumeric(pipLeftNumeric, config.PIPPosition.Left);
@@ -434,6 +443,14 @@ namespace WoWCyclotron
 		{
 			String layoutName = orientationComboBox.SelectedItem.ToString();
 			config.layoutOrientation = Enum.Parse<MultiBoxOrientation>(layoutName);
+			updatePIPSizeVisible();
+			//updateWoWClientsIfRunning();
+		}
+
+		private void OnLayoutMainWindowChanged(object sender, EventArgs e)
+		{
+			String layoutName = layoutMainWindowComboBox.SelectedItem.ToString();
+			config.layoutMain = Enum.Parse<MultiBoxMainWindow>(layoutName);
 			updatePIPSizeVisible();
 			//updateWoWClientsIfRunning();
 		}
