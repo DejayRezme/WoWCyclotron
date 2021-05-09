@@ -1,5 +1,10 @@
 # WoW Cyclotron
 
+# WARNING: Blizzard now banned any software streamlining multiboxing ([source](https://eu.forums.blizzard.com/en/wow/t/policy-update-for-input-broadcasting-may-2021/275502))
+> We will now additionally prohibit the use of all software and hardware mechanisms to mirror commands to multiple World of Warcraft accounts at the same time, or to automate or streamline multi-boxing in any way. 
+
+Sorry, I discourage the continued use for WoWCyclotron :(
+
 [Download](https://github.com/DejayRezme/WoWCyclotron/releases)
 
 A simple utility to launch multiple World of Warcraft instances and position them on your desktop in different layouts, including the ability to set the windows to borderless and alwaysOnTop, and a hotkey to switch which window is being shown as the big "maximized" main window.
