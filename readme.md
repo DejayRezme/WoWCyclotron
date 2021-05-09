@@ -5,6 +5,8 @@
 
 Sorry, I discourage the continued use for WoWCyclotron :(
 
+---
+
 [Download](https://github.com/DejayRezme/WoWCyclotron/releases)
 
 A simple utility to launch multiple World of Warcraft instances and position them on your desktop in different layouts, including the ability to set the windows to borderless and alwaysOnTop, and a hotkey to switch which window is being shown as the big "maximized" main window.
